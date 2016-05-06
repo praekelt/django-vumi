@@ -9,16 +9,16 @@ setup(
     author_email='dev@praekelt.com',
     license='BSD',
     url='http://github.com/praekelt/django-vumi',
-    packages=find_packages(),
+    packages=[
+        'django_vumi',
+    ],
     install_requires = [
         'django',
         'junebug',
         'celery',
+        'jsonfield',
+        'django-memoize',
     ],
-    tests_require=[
-        'django-setuptest>=0.2.1',
-    ],
-    test_suite="setuptest.setuptest.SetupTestSuite",
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python",

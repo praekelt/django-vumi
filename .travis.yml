@@ -1,8 +1,13 @@
 language: python
+sudo: false
+cache: pip
 install:
-  - pip install tox
+  - pip install 'pip>=8.1.1'
+  - pip install tox coveralls
 script:
   - tox
 env:
   - TOXENV=py27-1.8
   - TOXENV=py27-1.9
+after_success:
+  - coveralls

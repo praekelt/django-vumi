@@ -75,3 +75,6 @@ logs/
 # Tempdb
 db.sqlite3
 
+# tester
+pep8.txt
+
