@@ -1,0 +1,36 @@
+from setuptools import setup, find_packages
+
+setup(
+    name='django-vumi',
+    version='0.1.0',
+    description='Scalable and task-driven VUMI integration for Django.',
+    long_description=open('README.rst', 'r').read(),
+    author='Praekelt Consulting',
+    author_email='dev@praekelt.com',
+    license='BSD',
+    url='http://github.com/praekelt/django-vumi',
+    packages=find_packages(),
+    install_requires = [
+        'django',
+        'junebug',
+        'celery',
+    ],
+    tests_require=[
+        'django-setuptest>=0.2.1',
+    ],
+    test_suite="setuptest.setuptest.SetupTestSuite",
+    include_package_data=True,
+    classifiers=[
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: POSIX",
+        "Development Status :: 4 - Beta",
+        "Framework :: Django",
+        "Intended Audience :: Developers",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: System :: Networking",
+    ],
+    zip_safe=False,
+)
