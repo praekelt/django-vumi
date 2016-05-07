@@ -2,6 +2,12 @@ Django Vumi
 ===========
 **Scalable and task-driven VUMI integration for Django.**
 
+.. image:: https://travis-ci.org/praekelt/django-vumi.svg?branch=master
+    :target: https://travis-ci.org/praekelt/django-vumi
+
+.. image:: https://coveralls.io/repos/github/praekelt/django-vumi/badge.svg?branch=master
+    :target: https://coveralls.io/github/praekelt/django-vumi?branch=master
+
 .. contents:: Contents
     :depth: 5
 
