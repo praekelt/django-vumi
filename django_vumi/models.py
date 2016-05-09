@@ -1,3 +1,6 @@
+'''
+Django-Vumi conversation models
+'''
 from __future__ import unicode_literals
 
 from datetime import timedelta
@@ -202,9 +205,9 @@ class Message(models.Model):
         timestamp = pytz.utc.localize(dateparse(data['timestamp']))
 
         # Build conversation Key
-        if data.get('group') is not None:
-            # TODO: What is group?
-            pass
+        # if data.get('group') is not None:
+        #     # TODO: What is group?
+        #     pass
         key = ':'.join(sorted([str(data['from_addr']), str(data['to_addr'])]))
 
         # Follow-up conversation

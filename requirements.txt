@@ -1,0 +1,16 @@
+django
+python-dateutil
+requests
+celery
+jsonfield
+django-memoize
+
+
+# Dev dependencies
+tox
+pylint
+pylint_django
+coverage
+docutils
+flake8
+

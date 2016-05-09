@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='django-vumi',
+    name='django_vumi',
     version='0.1.0',
     description='Scalable and task-driven VUMI integration for Django.',
     long_description=open('README.rst', 'r').read(),
@@ -14,7 +14,8 @@ setup(
     ],
     install_requires = [
         'django',
-        'junebug',
+        'python-dateutil',
+        'requests',
         'celery',
         'jsonfield',
         'django-memoize',
