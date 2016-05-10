@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+'''
+Test/Dev launcher for Django-Vumi
+'''
 import os
 import sys
 

@@ -203,11 +203,17 @@ class UtilsTestCase(TestCase):
             self.assertFalse(is_notempty(val), '%s is empty' % repr(val))
 
     def test_cdel(self):
+        '''
+        Test that cdel deletes keys from dict if key exists
+        '''
         dct = {'a': 1, 'b': 2, 'c': 3}
         cdel(dct, 'b')
         self.assertEquals(sorted(dct.keys()), ['a', 'c'])
 
     def test_cdel_missing(self):
+        '''
+        Test that cdel gracefully handles deletes on non-existing keys
+        '''
         dct = {'a': 1, 'c': 3}
         cdel(dct, 'b')
         self.assertEquals(sorted(dct.keys()), ['a', 'c'])

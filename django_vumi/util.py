@@ -39,6 +39,9 @@ def gen_reply_message(content, reply_msg, session_event, metadata):
 
 
 def cdel(dct, key):
+    '''
+    Optionally delete 'key' in dict 'dct'
+    '''
     try:
         del dct[key]
     except KeyError:

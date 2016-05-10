@@ -1,4 +1,7 @@
-from setuptools import setup, find_packages
+'''
+Setup for Django-Vumi
+'''
+from setuptools import setup
 
 setup(
     name='django_vumi',
@@ -12,7 +15,7 @@ setup(
     packages=[
         'django_vumi',
     ],
-    install_requires = [
+    install_requires=[
         'django',
         'python-dateutil',
         'requests',

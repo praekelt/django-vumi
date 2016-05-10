@@ -3,13 +3,10 @@ Junebug Conversation Celery tasks
 '''
 import json
 from celery import shared_task
-from django.conf import settings
 from kombu import Connection
 
 from django_vumi.models import Message
 from django_vumi.util import gen_reply_message
-
-QUEUE_PUBLISH = '%s.outbound' % settings.JUNEBUG_AMQP['queue']
 
 
 def send_msg(msg):
@@ -18,9 +15,10 @@ def send_msg(msg):
     '''
     data = json.dumps(msg)
     Message.log_message(msg, Message.STATE_SENT)
+    channel = Message.conversation.channel
 
-    with Connection(settings.JUNEBUG_AMQP['service']) as conn:
-        producer = conn.Producer(routing_key=QUEUE_PUBLISH)
+    with Connection(channel.junebug.amqp_service) as conn:
+        producer = conn.Producer(routing_key='%s.outbound' % channel.amqp_queue)
         producer.publish(data)
 
 
