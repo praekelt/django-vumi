@@ -9,7 +9,7 @@ from datetime import datetime
 from django.test import TestCase
 
 from django_vumi.models import Conversation, Message
-from django_vumi.util import idgen, gen_reply_message, is_notempty, strip_copy
+from django_vumi.util import idgen, gen_reply_message, is_notempty, strip_copy, cdel
 
 
 def randstr():
@@ -201,6 +201,16 @@ class UtilsTestCase(TestCase):
         # Empty
         for val in [None, '', (), {}, []]:
             self.assertFalse(is_notempty(val), '%s is empty' % repr(val))
+
+    def test_cdel(self):
+        dct = {'a': 1, 'b': 2, 'c': 3}
+        cdel(dct, 'b')
+        self.assertEquals(sorted(dct.keys()), ['a', 'c'])
+
+    def test_cdel_missing(self):
+        dct = {'a': 1, 'c': 3}
+        cdel(dct, 'b')
+        self.assertEquals(sorted(dct.keys()), ['a', 'c'])
 
     def test_strip_copy(self):
         '''
