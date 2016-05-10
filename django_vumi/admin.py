@@ -2,16 +2,26 @@
 Junebug Conversation Admin
 '''
 from django.contrib import admin
-from django_vumi.models import Channel, Conversation, Message
+from django_vumi.models import Junebug, Channel, Conversation, Message
 
 
 # Register your models here.
-@admin.register(Channel)
-class ChannelAdmin(admin.ModelAdmin):
+
+class ChannelInline(admin.TabularInline):
     '''
-    Channels Admin
+    Channels Inline for Junebug instance
     '''
-    list_display = ['label', 'ctype', 'uid']
+    model = Channel
+    extra = 0
+
+
+@admin.register(Junebug)
+class JunebugAdmin(admin.ModelAdmin):
+    '''
+    Junebug instance Admin
+    '''
+    list_display = ['api_url', 'enabled']
+    inlines = [ChannelInline]
 
 
 class MessageInline(admin.TabularInline):

@@ -38,6 +38,13 @@ def gen_reply_message(content, reply_msg, session_event, metadata):
     return ret
 
 
+def cdel(dct, key):
+    try:
+        del dct[key]
+    except KeyError:
+        pass
+
+
 def is_notempty(item):
     '''
     Checks for "emptiness" of data, (not falsiness)

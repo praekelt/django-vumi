@@ -1,12 +1,24 @@
 [
 {
-    "model": "django_vumi.channel",
-    "pk": "2427d857-688d-4cee-88d9-8e0e32dfdc13",
-    "fields": {
-        "ctype": "telnet",
-        "label": "Telnet channel",
-        "expiry_seconds": 7200,
-        "data": "{\"type\":\"telnet\",\"amqp_queue\":\"tel\",\"config\":{\"twisted_endpoint\":\"tcp:9001\"},\"id\":\"2427d857-688d-4cee-88d9-8e0e32dfdc13\",\"label\":\"Telnet channel\"}"
-    }
+  "model": "django_vumi.junebug",
+  "pk": 1,
+  "fields": {
+    "api_url": "http://127.0.0.1:8080/",
+    "enabled": true,
+    "amqp_service": "amqp://guest:guest@localhost//",
+    "amqp_exchange": "vumi"
+  }
+},
+{
+  "model": "django_vumi.channel",
+  "pk": "2427d857-688d-4cee-88d9-8e0e32dfdc13",
+  "fields": {
+    "junebug": 1,
+    "ctype": "telnet",
+    "label": "Telnet channel",
+    "expiry_seconds": 7200,
+    "amqp_queue": "tel",
+    "data": "{\"type\":\"telnet\",\"amqp_queue\":\"tel\",\"config\":{\"twisted_endpoint\":\"tcp:9001\"},\"id\":\"2427d857-688d-4cee-88d9-8e0e32dfdc13\",\"label\":\"Telnet channel\"}"
+  }
 }
 ]

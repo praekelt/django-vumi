@@ -8,15 +8,24 @@ from datetime import timedelta
 import requests
 import pytz
 from dateutil.parser import parse as dateparse
-from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from memoize import memoize
 
-from django_vumi.util import strip_copy
+from django_vumi.util import strip_copy, cdel
 
 # Create your models here.
+
+
+class Junebug(models.Model):
+    '''
+    Junebug instance
+    '''
+    api_url = models.URLField(unique=True)
+    enabled = models.BooleanField(default=True)
+    amqp_service = models.CharField(max_length=255)
+    amqp_exchange = models.CharField(max_length=50, default='vumi')
 
 
 class Channel(models.Model):
@@ -24,9 +33,11 @@ class Channel(models.Model):
     Junebug Transports
     '''
     uid = models.CharField(max_length=50, primary_key=True)
+    junebug = models.ForeignKey(Junebug)
     ctype = models.CharField(max_length=50)
     label = models.CharField(max_length=100)
     expiry_seconds = models.PositiveIntegerField(default=7200)
+    amqp_queue = models.CharField(max_length=50)
     data = JSONField(null=True, blank=True)
 
     @classmethod
@@ -40,23 +51,24 @@ class Channel(models.Model):
         if obj:
             return obj
         else:  # pragma: nocoverage
-            # Fetch channel from Junebug, and create self
-            r = requests.get('%schannels/%s' % (settings.JUNEBUG_HTTP, uid))
-            if r.status_code == 200:
-                data = r.json()['result']
-                try:
-                    del data['status']
-                except KeyError:
-                    pass
-                obj = cls(
-                    uid=uid,
-                    ctype=data['type'],
-                    label=data.get('label', uid),
-                    expiry_seconds=data.get('metadata', {}).get('expiry_seconds', 7200),
-                    data=strip_copy(data)
-                )
-                obj.save()
-                return obj
+            for jb in Junebug.objects.filter(enabled=True):
+                # Fetch channel from Junebug, and create self
+                r = requests.get('%schannels/%s' % (jb.api_url, uid))
+                if r.status_code == 200:
+                    data = r.json()['result']
+                    obj = cls(
+                        uid=uid,
+                        ctype=data['type'],
+                        label=data.get('label', uid),
+                        expiry_seconds=data.get('metadata', {}).get('expiry_seconds', 7200),
+                        amqp_queue=data.get['amqp_queue']
+                    )
+                    cdel(data.get('metadata', {}), 'expiry_seconds')
+                    for key in ['type', 'label', 'amqp_queue', 'status']:
+                        cdel(data, key)
+                    obj.data = strip_copy(data)
+                    obj.save()
+                    return obj
 
             # Er...
             raise Exception('Could not auto-fetch Channel')
