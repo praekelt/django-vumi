@@ -18,7 +18,7 @@
     "label": "Telnet channel",
     "expiry_seconds": 7200,
     "amqp_queue": "tel",
-    "data": "{\"type\":\"telnet\",\"amqp_queue\":\"tel\",\"config\":{\"twisted_endpoint\":\"tcp:9001\"},\"id\":\"2427d857-688d-4cee-88d9-8e0e32dfdc13\",\"label\":\"Telnet channel\"}"
+    "data": "{\"config\":{\"twisted_endpoint\":\"tcp:9001\"}}"
   }
 }
 ]

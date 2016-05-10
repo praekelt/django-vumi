@@ -13,6 +13,7 @@ class ChannelInline(admin.TabularInline):
     '''
     model = Channel
     extra = 0
+    can_delete = False
 
 
 @admin.register(Junebug)
@@ -44,6 +45,6 @@ class ConversationAdmin(admin.ModelAdmin):
     Conversation log-view
     '''
     list_display = ['key', 'channel', 'first_timestamp', 'length', 'live']
-    fields = ['key', 'channel', 'length', 'live', 'first_timestamp', 'last_timestamp', 'expires_at']
+    fields = ['key', 'channel', 'length', 'live', 'first_timestamp', 'last_timestamp', 'expires_at', 'state']
     readonly_fields = fields
     inlines = [MessageInline]

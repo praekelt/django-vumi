@@ -33,6 +33,7 @@ class Channel(models.Model):
     Junebug Transports
     '''
     uid = models.CharField(max_length=50, primary_key=True)
+    enabled = models.BooleanField(default=True)
     junebug = models.ForeignKey(Junebug)
     ctype = models.CharField(max_length=50)
     label = models.CharField(max_length=100)
@@ -64,7 +65,7 @@ class Channel(models.Model):
                         amqp_queue=data.get['amqp_queue']
                     )
                     cdel(data.get('metadata', {}), 'expiry_seconds')
-                    for key in ['type', 'label', 'amqp_queue', 'status']:
+                    for key in ['id', 'type', 'label', 'amqp_queue', 'status']:
                         cdel(data, key)
                     obj.data = strip_copy(data)
                     obj.save()
@@ -86,6 +87,7 @@ class Conversation(models.Model):
     key = models.CharField(max_length=100, db_index=True)
     live = models.BooleanField(default=True)
     expires_at = models.DateTimeField()
+    state = JSONField(default={})
 
     # Deriveable messages
     first_timestamp = models.DateTimeField()
