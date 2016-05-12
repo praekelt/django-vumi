@@ -17,7 +17,7 @@ check:
 	@python setup.py check -mrs
 
 test:
-	@coverage run -a --omit=*/migrations/* --source=django_vumi --branch manage.py test django_vumi
+	@coverage run --omit=*/migrations/*,*/tests/* --source=django_vumi --branch manage.py test django_vumi
 	@coverage report -m
 
 lint:
