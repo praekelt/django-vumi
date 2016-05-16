@@ -16,10 +16,11 @@ from memoize import memoize
 from django_vumi.util import strip_copy, cdel
 
 # Create your models here.
-CONVERSATIONS = [
-    ('django_vumi.handler.noop', 'No-Op'),
-    ('django_vumi.handler.echo', 'Echo'),
-]
+CONVERSATION_HANDLERS = {
+    'No-Op': 'django_vumi.handler.noop',
+    'Echo': 'django_vumi.handler.echo',
+}
+CONVERSATIONS = [('', '')]
 
 
 class Junebug(models.Model):

@@ -1,5 +1,5 @@
 '''
-Junebug Conversation Tests
+Django-Vumi Conversation logging Tests
 '''
 from __future__ import unicode_literals
 

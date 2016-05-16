@@ -1,3 +1,6 @@
+'''
+Django-Vumi Conversation-handler
+'''
 import importlib
 import json
 
@@ -8,6 +11,9 @@ from django_vumi.util import gen_reply_message
 
 
 def resolve_object(name):
+    '''
+    Resolves an object/module based on name. Returns None if not found.
+    '''
     pos = name.rfind('.')
     try:
         return getattr(importlib.import_module(name[:pos]), name[pos+1:])
