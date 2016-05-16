@@ -16,6 +16,10 @@ from memoize import memoize
 from django_vumi.util import strip_copy, cdel
 
 # Create your models here.
+CONVERSATIONS = [
+    ('django_vumi.handler.noop', 'No-Op'),
+    ('django_vumi.handler.echo', 'Echo'),
+]
 
 
 class Junebug(models.Model):
@@ -39,6 +43,7 @@ class Channel(models.Model):
     label = models.CharField(max_length=100)
     expiry_seconds = models.PositiveIntegerField(default=7200)
     amqp_queue = models.CharField(max_length=50)
+    handler = models.CharField(max_length=255, choices=CONVERSATIONS)
     data = JSONField(null=True, blank=True)
 
     @classmethod

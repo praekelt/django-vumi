@@ -24,6 +24,9 @@ setup(
         'django-memoize',
     ],
     include_package_data=True,
+    scripts=[
+        'django_vumi/celery_transport.py'
+    ],
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",

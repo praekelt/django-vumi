@@ -3,23 +3,9 @@ Junebug Conversation Celery tasks
 '''
 import json
 from celery import shared_task
-from kombu import Connection
 
+from django_vumi.handler import resolve_object
 from django_vumi.models import Message
-from django_vumi.util import gen_reply_message
-
-
-def send_msg(msg):
-    '''
-    Sends message to Junebug for routing & log message
-    '''
-    data = json.dumps(msg)
-    Message.log_message(msg, Message.STATE_SENT)
-    channel = Message.conversation.channel
-
-    with Connection(channel.junebug.amqp_service) as conn:
-        producer = conn.Producer(routing_key='%s.outbound' % channel.amqp_queue)
-        producer.publish(data)
 
 
 @shared_task(ignore_result=True)
@@ -29,15 +15,8 @@ def inbound(data):
     '''
     msg = json.loads(data)
     mobj = Message.log_message(msg, Message.STATE_ACK)
-    # status, data = Block.resolve_block(mobj)
-    # if data:
-    #     if status:
-    #         omsg = data.generate_response(mobj)  # pylint: disable=E1101
-    #     else:
-    #         omsg = Block.rescue_conversation(mobj, data)
-    # else:
-    omsg = gen_reply_message("Not yet implemented, sorry", mobj, 'resume', None)
-    send_msg(omsg)
+    fun = resolve_object(mobj.conversation.channel.handler)
+    fun(mobj)
 
 
 @shared_task(ignore_result=True)

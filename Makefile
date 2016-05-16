@@ -35,3 +35,4 @@ redb:
 	@-rm -f db.sqlite3
 	@./manage.py migrate --noinput
 	@./manage.py loaddata django_vumi/fixtures/devs_user.json
+	@./manage.py loaddata django_vumi/fixtures/test_channel.json

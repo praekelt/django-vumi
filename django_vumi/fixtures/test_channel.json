@@ -18,6 +18,7 @@
     "label": "Telnet channel",
     "expiry_seconds": 7200,
     "amqp_queue": "tel",
+    "handler": "django_vumi.handler.echo",
     "data": "{\"config\":{\"twisted_endpoint\":\"tcp:9001\"}}"
   }
 }
