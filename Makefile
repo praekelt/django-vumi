@@ -15,6 +15,7 @@ check:
 	@echo "# Check sources for errors..."
 	@pylint -E $(checkfiles)
 	@python setup.py check -mrs
+	@flake8 $(checkfiles)
 
 test:
 	@coverage run --omit=*/migrations/*,*/tests/* --source=django_vumi --branch manage.py test django_vumi

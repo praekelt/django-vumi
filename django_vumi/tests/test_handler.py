@@ -4,13 +4,13 @@ Django-Vumi Conversation-handler Tests
 from __future__ import unicode_literals
 
 from django.test import TestCase
+from django.apps import apps
 
 from django_vumi.models import CONVERSATIONS, Message, Conversation
-from django.apps import apps
-from django_vumi.util import idgen, gen_reply_message, is_notempty, strip_copy, cdel
+from django_vumi.util import gen_reply_message
 from django_vumi.tests.helpers import generate_message
-
 from django_vumi.handler import resolve_object, send_msg, echo, noop
+
 
 class HandlerTestCase(TestCase):
     '''
@@ -47,7 +47,8 @@ class HandlerTestCase(TestCase):
         '''
         Tests that settings.VUMI_HANDLERS are handled to spec.
         '''
-        with self.settings(VUMI_HANDLERS = {'bad': 'django_vumi.missing_module', 'good': 'django_vumi.handler.resolve_object'}):
+        with self.settings(VUMI_HANDLERS={'bad': 'django_vumi.missing_module',
+                                          'good': 'django_vumi.handler.resolve_object'}):
             apps.get_app_config('django_vumi').ready()
             convs = [b for a, b in CONVERSATIONS]
             self.assertIn('good', convs)
