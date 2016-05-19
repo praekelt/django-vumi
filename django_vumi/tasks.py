@@ -25,8 +25,6 @@ def event(data):
     Celery task to recieve Vumi (Junebug) event and process it.
     '''
     msg = json.loads(data)
-    Message.event_message(msg)
-    if msg['event_type'] in ['ack', 'nack'] and 'user_message_id' in msg.keys():
-        print('%s: %s' % (msg['event_type'], msg['user_message_id']))
-    else:
+    actioned = Message.event_message(msg)
+    if not actioned:
         print(data)
