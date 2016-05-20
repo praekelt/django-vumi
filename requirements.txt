@@ -13,4 +13,5 @@ pylint_django
 coverage
 docutils
 flake8
+pygments
 

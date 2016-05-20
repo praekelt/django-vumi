@@ -16,6 +16,16 @@ Installation
 
 #. Install or add ``django-vumi`` to your Python path.
 
-#. Add ``django_vumi`` to your ``INSTALLED_APPS`` setting.
+#. Add ``'django_vumi'`` to your ``INSTALLED_APPS`` setting.
 
+#. For any custom conversation engine handlers, please add a dict in your settings document specifying a name and a object:
+    .. code:: python
+    
+       VUMI_HANDLERS = {
+           'Reverse Echo': 'test_project.handler.reverse_echo',
+       }
 
+Conversation Engine
+-------------------
+
+Todo.

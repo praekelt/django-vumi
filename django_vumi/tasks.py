@@ -27,4 +27,4 @@ def event(data):
     msg = json.loads(data)
     actioned = Message.event_message(msg)
     if not actioned:
-        print(data)
+        print("Unhandled event: %s" % data)

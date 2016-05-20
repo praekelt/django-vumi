@@ -2,4 +2,4 @@ include CHANGELOG.rst
 include LICENSE
 include README.rst
 include manage.py
-
+recursive-include django_vumi/templates *

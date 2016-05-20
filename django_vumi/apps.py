@@ -18,7 +18,7 @@ class DjangoVumiConfig(AppConfig):
         from django_vumi.models import CONVERSATIONS, CONVERSATION_HANDLERS
 
         # Clear list without destroying it
-        for a in range(len(CONVERSATIONS)):
+        for _ in range(len(CONVERSATIONS)):
             CONVERSATIONS.pop()
 
         handlers = CONVERSATION_HANDLERS.copy()

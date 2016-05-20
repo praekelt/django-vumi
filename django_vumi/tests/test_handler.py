@@ -50,7 +50,7 @@ class HandlerTestCase(TestCase):
         with self.settings(VUMI_HANDLERS={'bad': 'django_vumi.missing_module',
                                           'good': 'django_vumi.handler.resolve_object'}):
             apps.get_app_config('django_vumi').ready()
-            convs = [b for a, b in CONVERSATIONS]
+            convs = [b for _, b in CONVERSATIONS]
             self.assertIn('good', convs)
             self.assertNotIn('bad', convs)
 

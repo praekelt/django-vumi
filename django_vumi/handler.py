@@ -35,8 +35,14 @@ def send_msg(msg):
 
 
 def echo(mobj):
+    '''
+    Simply replies back with the received message.
+    '''
     send_msg(gen_reply_message(mobj.content, mobj, 'resume', None))
 
 
-def noop(mobj):
+def noop(mobj):  # pylint: disable=W0613
+    '''
+    No action.
+    '''
     pass
