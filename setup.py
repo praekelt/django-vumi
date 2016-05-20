@@ -4,7 +4,7 @@ Setup for Django-Vumi
 from setuptools import setup
 
 setup(
-    name='django_vumi',
+    name='django-vumi',
     version='0.1.0',
     description='Scalable and task-driven VUMI integration for Django.',
     long_description=open('README.rst', 'r').read(),
@@ -14,6 +14,8 @@ setup(
     url='http://github.com/praekelt/django-vumi',
     packages=[
         'django_vumi',
+        'django_vumi.migrations',
+        'django_vumi.tests',
     ],
     install_requires=[
         'django',
