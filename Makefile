@@ -18,8 +18,8 @@ check:
 	@flake8 $(checkfiles)
 
 test:
-	@coverage run --omit=*/migrations/*,*/tests/* --source=django_vumi --branch manage.py test django_vumi
-	@coverage report -m
+	@coverage run manage.py test django_vumi
+	@coverage report
 
 lint:
 	@-flake8 $(checkfiles)
