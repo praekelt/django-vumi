@@ -25,6 +25,9 @@ Installation
            'Reverse Echo': 'test_project.handler.reverse_echo',
        }
 
+#. Ensure celery app is set up. Look at ``test_project/__init__.py`` and ``test_project/celery_app.py``
+
+
 Conversation Engine
 -------------------
 
