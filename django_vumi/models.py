@@ -65,10 +65,11 @@ class Channel(models.Model):
                     data = r.json()['result']
                     obj = cls(
                         uid=uid,
+                        junebug=jb,
                         ctype=data['type'],
                         label=data.get('label', uid),
                         expiry_seconds=data.get('metadata', {}).get('expiry_seconds', 7200),
-                        amqp_queue=data.get['amqp_queue']
+                        amqp_queue=data.get('amqp_queue')
                     )
                     cdel(data.get('metadata', {}), 'expiry_seconds')
                     for key in ['id', 'type', 'label', 'amqp_queue', 'status']:

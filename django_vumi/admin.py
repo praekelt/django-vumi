@@ -1,7 +1,11 @@
 '''
 Junebug Conversation Admin
 '''
+import yaml
+
 from django.contrib import admin
+from django.utils.html import escape, mark_safe
+
 from django_vumi.models import Junebug, Channel, Conversation, Message
 
 
@@ -31,12 +35,19 @@ class MessageInline(admin.TabularInline):
     '''
     model = Message
     fields = ['id', 'timestamp', 'ack_timestamp', 'session_event', 'state', 'from_address',
-              'to_address', 'content', 'extra']
+              'to_address', 'content', 'extra_human']
     readonly_fields = fields
     extra = 0
     can_delete = False
     ordering = ['timestamp']
     template = 'compact_tabular_inline.html'
+
+    def extra_human(self, obj):  # pragma: nocoverage
+        if obj.extra:
+            return mark_safe('<pre style="margin: 0;display: inline-block;max-width: 30vw">%s</pre>' % escape(yaml.safe_dump(obj.extra, default_flow_style=False).strip()))
+        else:
+            return ''
+    extra_human.short_description = 'Extra'
 
 
 @admin.register(Conversation)
