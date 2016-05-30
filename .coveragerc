@@ -1,0 +1,12 @@
+[run]
+branch = True
+source =
+    django_vumi
+omit = 
+    */migrations/*
+    */management/*
+    */tests/*
+
+[report]
+show_missing = True
+
