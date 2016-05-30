@@ -44,7 +44,9 @@ class MessageInline(admin.TabularInline):
 
     def extra_human(self, obj):  # pragma: nocoverage
         if obj.extra:
-            return mark_safe('<pre style="margin: 0;display: inline-block;max-width: 30vw">%s</pre>' % escape(yaml.safe_dump(obj.extra, default_flow_style=False).strip()))
+            return mark_safe(
+                '<pre style="margin: 0;display: inline-block;max-width: 30vw">%s</pre>'
+                % escape(yaml.safe_dump(obj.extra, default_flow_style=False).strip()))
         else:
             return ''
     extra_human.short_description = 'Extra'

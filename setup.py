@@ -24,6 +24,7 @@ setup(
         'celery',
         'jsonfield',
         'django-memoize',
+        'PyYAML',
     ],
     include_package_data=True,
     scripts=[
