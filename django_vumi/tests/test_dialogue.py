@@ -5,13 +5,13 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 
-from django_vumi.models import Conversation, Message
+from django_vumi.models import Dialogue, Message
 from django_vumi.tests.helpers import ack_message, generate_message
 
 
-class ConversationTestCase(TestCase):
+class DialogueTestCase(TestCase):
     '''
-    Tests conversation recording
+    Tests dialogue recording
     '''
     fixtures = ['test_channel.json']
 
@@ -20,7 +20,7 @@ class ConversationTestCase(TestCase):
         Tests log_message
         '''
         Message.log_message(generate_message(['a', 'b']), Message.STATE_ACK)
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 1)
@@ -32,13 +32,13 @@ class ConversationTestCase(TestCase):
         msg = Message.log_message(generate_message(['a', 'b'], content=""), Message.STATE_ACK)
         self.assertIsNone(msg.content)
 
-    def test_log_message_conversation(self):
+    def test_log_message_dialogue(self):
         '''
-        Tests log_message maps messages between 2 parties to the same conversation
+        Tests log_message maps messages between 2 parties to the same dialogue
         '''
         for _ in range(10):
             Message.log_message(generate_message(['a', 'b']), Message.STATE_ACK)
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 10)
@@ -49,19 +49,19 @@ class ConversationTestCase(TestCase):
         '''
         mobj = Message.log_message(generate_message(['a', 'b']), Message.STATE_ACK)
         Message.log_message(generate_message(['c', 'd'], in_reply_to=mobj.id), Message.STATE_ACK)
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)
 
-    def test_conversation_close(self):
+    def test_dialogue_close(self):
         '''
-        Tests that session_event='close' closes conversation
+        Tests that session_event='close' closes dialogue
         '''
         Message.log_message(generate_message(['a', 'b']), Message.STATE_ACK)
         Message.log_message(generate_message(['a', 'b'], session_event='close'), Message.STATE_ACK)
         Message.log_message(generate_message(['a', 'b']), Message.STATE_ACK)
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 2)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)

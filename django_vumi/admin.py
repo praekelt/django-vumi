@@ -1,12 +1,12 @@
 '''
-Junebug Conversation Admin
+Junebug Dialogue Admin
 '''
 import yaml
 
 from django.contrib import admin
 from django.utils.html import escape, mark_safe
 
-from django_vumi.models import Junebug, Channel, Conversation, Message
+from django_vumi.models import Junebug, Channel, Dialogue, Message
 
 
 # Register your models here.
@@ -31,7 +31,7 @@ class JunebugAdmin(admin.ModelAdmin):
 
 class MessageInline(admin.TabularInline):
     '''
-    Message-log Inline for Conversation
+    Message-log Inline for Dialogue
     '''
     model = Message
     fields = ['id', 'timestamp', 'ack_timestamp', 'session_event', 'state', 'from_address',
@@ -52,10 +52,10 @@ class MessageInline(admin.TabularInline):
     extra_human.short_description = 'Extra'
 
 
-@admin.register(Conversation)
-class ConversationAdmin(admin.ModelAdmin):
+@admin.register(Dialogue)
+class DialogueAdmin(admin.ModelAdmin):
     '''
-    Conversation log-view
+    Dialogue log-view
     '''
     list_display = ['key', 'channel', 'first_timestamp', 'length', 'live']
     fields = ['key', 'channel', 'length', 'live', 'first_timestamp', 'last_timestamp',

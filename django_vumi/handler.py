@@ -1,5 +1,5 @@
 '''
-Django-Vumi Conversation-handler
+Django-Vumi Dialogue-handler
 '''
 import importlib
 import json
@@ -27,7 +27,7 @@ def send_msg(msg):
     '''
     data = json.dumps(msg)
     mobj = Message.log_message(msg, Message.STATE_SENT)
-    channel = mobj.conversation.channel
+    channel = mobj.dialogue.channel
 
     with Connection(channel.junebug.amqp_service) as conn:
         producer = conn.Producer(routing_key='%s.outbound' % channel.amqp_queue)

@@ -15,15 +15,15 @@ class DjangoVumiConfig(AppConfig):
     def ready(self):
         from django.conf import settings
         from django_vumi.handler import resolve_object
-        from django_vumi.models import CONVERSATIONS, CONVERSATION_HANDLERS
+        from django_vumi.models import DIALOGUES, DIALOGUE_HANDLERS
 
         # Clear list without destroying it
-        for _ in range(len(CONVERSATIONS)):
-            CONVERSATIONS.pop()
+        for _ in range(len(DIALOGUES)):
+            DIALOGUES.pop()
 
-        handlers = CONVERSATION_HANDLERS.copy()
+        handlers = DIALOGUE_HANDLERS.copy()
         handlers.update(getattr(settings, 'VUMI_HANDLERS', {}))
         for k in sorted(handlers.keys()):
             v = handlers[k]
             if resolve_object(v):
-                CONVERSATIONS.append((v, k))
+                DIALOGUES.append((v, k))

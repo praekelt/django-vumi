@@ -1,5 +1,5 @@
 '''
-Junebug Conversation Celery tasks
+Junebug Dialogue Celery tasks
 '''
 import json
 from celery import shared_task
@@ -15,7 +15,7 @@ def inbound(data):
     '''
     msg = json.loads(data)
     mobj = Message.log_message(msg, Message.STATE_ACK)
-    fun = resolve_object(mobj.conversation.channel.handler)
+    fun = resolve_object(mobj.dialogue.channel.handler)
     fun(mobj)
 
 

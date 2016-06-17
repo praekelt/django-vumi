@@ -7,7 +7,7 @@ import json
 
 from django.test import TestCase
 
-from django_vumi.models import Message, Conversation
+from django_vumi.models import Message, Dialogue
 from django_vumi.tests.helpers import generate_message, ack_message
 from django_vumi.tasks import inbound, event
 
@@ -26,7 +26,7 @@ class TaskTestCase(TestCase):
         msg = generate_message(['a', 'b'], direction=True)
         inbound(json.dumps(msg))
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)
@@ -38,7 +38,7 @@ class TaskTestCase(TestCase):
         evnt = ack_message({'message_id': '1'}, True)
         event(json.dumps(evnt))
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 0)
 
     def test_event_ack_exist(self):
@@ -49,7 +49,7 @@ class TaskTestCase(TestCase):
         msg['message_id'] = '1'
         inbound(json.dumps(msg))
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)
@@ -72,7 +72,7 @@ class TaskTestCase(TestCase):
         msg['message_id'] = '1'
         inbound(json.dumps(msg))
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)
@@ -95,7 +95,7 @@ class TaskTestCase(TestCase):
         msg['message_id'] = '1'
         inbound(json.dumps(msg))
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)

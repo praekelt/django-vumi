@@ -1,5 +1,5 @@
 '''
-Django-Vumi conversation models
+Django-Vumi dialogue models
 '''
 from __future__ import unicode_literals
 
@@ -16,11 +16,11 @@ from memoize import memoize
 from django_vumi.util import strip_copy, cdel
 
 # Create your models here.
-CONVERSATION_HANDLERS = {
+DIALOGUE_HANDLERS = {
     'No-Op': 'django_vumi.handler.noop',
     'Echo': 'django_vumi.handler.echo',
 }
-CONVERSATIONS = [('', '')]
+DIALOGUES = [('', '')]
 
 
 class Junebug(models.Model):
@@ -44,7 +44,7 @@ class Channel(models.Model):
     label = models.CharField(max_length=100)
     expiry_seconds = models.PositiveIntegerField(default=7200)
     amqp_queue = models.CharField(max_length=50)
-    handler = models.CharField(max_length=255, choices=CONVERSATIONS)
+    handler = models.CharField(max_length=255, choices=DIALOGUES)
     data = JSONField(null=True, blank=True)
 
     @classmethod
@@ -85,9 +85,9 @@ class Channel(models.Model):
         return self.label
 
 
-class Conversation(models.Model):
+class Dialogue(models.Model):
     '''
-    Junebug Conversations
+    Vumi Dialogues
     '''
     # Core properties
     channel = models.ForeignKey(Channel)
@@ -104,25 +104,25 @@ class Conversation(models.Model):
     @classmethod
     def update_or_new(cls, follow, channel, key, timestamp, finish):
         '''
-        Updates or creates a conversation based on search criteria.
+        Updates or creates a dialogue based on search criteria.
 
         follow:
-            Conversation follows on this message
+            Dialogue follows on this message
 
         or
 
         channel:
             Message from expected channel
         key:
-            Conversation search Key
+            Dialogue search Key
         timestamp:
             Should expire after this timestamp
         finish:
-            Should we mark the conversation as finished?
+            Should we mark the dialogue as finished?
         '''
         if follow:
-            obj = follow.conversation
-            # Force conversation to be live again - We have exact conversation to follow up on.
+            obj = follow.dialogue
+            # Force dialogue to be live again - We have exact dialogue to follow up on.
             obj.live = True
         else:
             obj = cls.objects.filter(
@@ -157,7 +157,7 @@ class Conversation(models.Model):
 
 class Message(models.Model):
     '''
-    Junebug Messages
+    Vumi Dialogue Messages
     '''
     EVENT_CHOICES = (
         ('n', 'New'),
@@ -182,7 +182,7 @@ class Message(models.Model):
     # Core properties
     id = models.CharField(max_length=50, primary_key=True)
     state = models.CharField(max_length=1, choices=STATE_CHOICES)
-    conversation = models.ForeignKey(Conversation, related_name='messages')
+    dialogue = models.ForeignKey(Dialogue, related_name='messages')
     timestamp = models.DateTimeField(null=True, blank=True)
     ack_timestamp = models.DateTimeField(null=True, blank=True)
     from_address = models.CharField(max_length=50)
@@ -225,20 +225,20 @@ class Message(models.Model):
         # timestamp
         timestamp = pytz.utc.localize(dateparse(data['timestamp']))
 
-        # Build conversation Key
+        # Build dialogue Key
         # if data.get('group') is not None:
         #     # TODO: What is group?
         #     pass
         key = ':'.join(sorted([str(data['from_addr']), str(data['to_addr'])]))
 
-        # Follow-up conversation
+        # Follow-up dialogue
         if data.get('in_reply_to') is not None:
             follow = cls.objects.filter(id=data['in_reply_to']).first()
         else:
             follow = None
 
-        # Conversation
-        conversation = Conversation.update_or_new(
+        # Dialogue
+        dialogue = Dialogue.update_or_new(
             follow,
             Channel.get_by_uid(data['transport_name']),
             key,
@@ -249,7 +249,7 @@ class Message(models.Model):
         msg = cls(
             id=data['message_id'],
             state=state,
-            conversation=conversation,
+            dialogue=dialogue,
             timestamp=timestamp,
             from_address=data['from_addr'],
             to_address=data['to_addr'],
@@ -277,4 +277,4 @@ class Message(models.Model):
         return msg
 
     def __unicode__(self):  # pragma: nocoverage
-        return "%s:%s" % (self.conversation, self.from_address)
+        return "%s:%s" % (self.dialogue, self.from_address)

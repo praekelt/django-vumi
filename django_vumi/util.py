@@ -29,8 +29,8 @@ def gen_reply_message(content, reply_msg, session_event, metadata):
         "content": content,
 
         # TODO: Find a way to cache this data
-        "transport_name": reply_msg.conversation.channel.uid,
-        "transport_type": reply_msg.conversation.channel.ctype,
+        "transport_name": reply_msg.dialogue.channel.uid,
+        "transport_type": reply_msg.dialogue.channel.ctype,
         "transport_metadata": {},
     }
     if metadata:

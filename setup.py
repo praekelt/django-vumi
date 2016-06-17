@@ -15,7 +15,6 @@ setup(
     packages=[
         'django_vumi',
         'django_vumi.migrations',
-        'django_vumi.tests',
     ],
     install_requires=[
         'django',

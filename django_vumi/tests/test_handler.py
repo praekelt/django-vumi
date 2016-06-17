@@ -1,12 +1,12 @@
 '''
-Django-Vumi Conversation-handler Tests
+Django-Vumi Dialogue-handler Tests
 '''
 from __future__ import unicode_literals
 
 from django.test import TestCase
 from django.apps import apps
 
-from django_vumi.models import CONVERSATIONS, Message, Conversation
+from django_vumi.models import DIALOGUES, Message, Dialogue
 from django_vumi.util import gen_reply_message
 from django_vumi.tests.helpers import generate_message
 from django_vumi.handler import resolve_object, send_msg, echo, noop
@@ -14,7 +14,7 @@ from django_vumi.handler import resolve_object, send_msg, echo, noop
 
 class HandlerTestCase(TestCase):
     '''
-    Tests the conversation-handler
+    Tests the dialogue-handler
     '''
     fixtures = ['test_channel.json']
 
@@ -50,7 +50,7 @@ class HandlerTestCase(TestCase):
         with self.settings(VUMI_HANDLERS={'bad': 'django_vumi.missing_module',
                                           'good': 'django_vumi.handler.resolve_object'}):
             apps.get_app_config('django_vumi').ready()
-            convs = [b for _, b in CONVERSATIONS]
+            convs = [b for _, b in DIALOGUES]
             self.assertIn('good', convs)
             self.assertNotIn('bad', convs)
 
@@ -61,7 +61,7 @@ class HandlerTestCase(TestCase):
         mobj = Message.log_message(generate_message(['a', 'b'], direction=True), Message.STATE_ACK)
         send_msg(gen_reply_message('test', mobj, 'resume', None))
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)
@@ -73,7 +73,7 @@ class HandlerTestCase(TestCase):
         mobj = Message.log_message(generate_message(['a', 'b'], direction=True), Message.STATE_ACK)
         echo(mobj)
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 2)
@@ -85,7 +85,7 @@ class HandlerTestCase(TestCase):
         mobj = Message.log_message(generate_message(['a', 'b'], direction=True), Message.STATE_ACK)
         noop(mobj)
 
-        convs = Conversation.objects.all()
+        convs = Dialogue.objects.all()
         self.assertEquals(len(convs), 1)
         msgs = convs[0].messages.all()
         self.assertEquals(len(msgs), 1)
