@@ -4,7 +4,7 @@ Junebug Dialogue Celery tasks
 import json
 from celery import shared_task
 
-from django_vumi.handler import resolve_object
+from django_vumi.util import resolve_object
 from django_vumi.models import Message
 
 

@@ -1,24 +1,12 @@
 '''
 Django-Vumi Dialogue-handler
 '''
-import importlib
 import json
 
 from kombu import Connection
 
 from django_vumi.models import Message
 from django_vumi.util import gen_reply_message
-
-
-def resolve_object(name):
-    '''
-    Resolves an object/module based on name. Returns None if not found.
-    '''
-    pos = name.rfind('.')
-    try:
-        return getattr(importlib.import_module(name[:pos]), name[pos+1:])
-    except (ImportError, AttributeError):
-        return None
 
 
 def send_msg(msg):

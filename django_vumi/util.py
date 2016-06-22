@@ -1,6 +1,7 @@
 '''
 Some simple utils
 '''
+import importlib
 import random
 from datetime import datetime
 
@@ -86,3 +87,29 @@ def strip_copy(item):
     if is_notempty(item):
         return item
     return None
+
+
+def resolve_object(name):
+    '''
+    Resolves an object/module based on name. Returns None if not found.
+    '''
+    pos = name.rfind('.')
+    try:
+        return getattr(importlib.import_module(name[:pos]), name[pos+1:])
+    except (ImportError, AttributeError):
+        return None
+
+
+def update_select(select, dct):
+    # Build 'current state' dict from `select`
+    cdct = {k:v for v,k in select if k}
+
+    # Clear `select` list without destroying it
+    for _ in range(len(select)):
+        select.pop()
+
+    cdct.update(dct)
+    for k in sorted(cdct.keys()):
+        v = cdct[k]
+        if resolve_object(v):
+            select.append((v, k))

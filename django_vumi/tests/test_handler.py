@@ -4,12 +4,11 @@ Django-Vumi Dialogue-handler Tests
 from __future__ import unicode_literals
 
 from django.test import TestCase
-from django.apps import apps
 
-from django_vumi.models import DIALOGUES, Message, Dialogue
+from django_vumi.models import Message, Dialogue
 from django_vumi.util import gen_reply_message
 from django_vumi.tests.helpers import generate_message
-from django_vumi.handler import resolve_object, send_msg, echo, noop
+from django_vumi.handler import send_msg, echo, noop
 
 
 class HandlerTestCase(TestCase):
@@ -17,42 +16,6 @@ class HandlerTestCase(TestCase):
     Tests the dialogue-handler
     '''
     fixtures = ['test_channel.json']
-
-    def test_resolve_object_valid(self):
-        '''
-        Tests resolve_object works
-        '''
-        self.assertEquals(resolve_object('django_vumi.handler.resolve_object'), resolve_object)
-
-    def test_resolve_object_module_missing(self):
-        '''
-        Tests resolve_object returns none on missing module
-        '''
-        self.assertIsNone(resolve_object('django_vumi.missing_module.stuff'))
-
-    def test_resolve_object_object_missing(self):
-        '''
-        Tests resolve_object returns none on missing object in module
-        '''
-        self.assertIsNone(resolve_object('django_vumi.handler.missing_object'))
-
-    def test_resolve_object_module(self):
-        '''
-        Tests resolve_object returns none on missing object in module
-        '''
-        from django_vumi import handler
-        self.assertEquals(resolve_object('django_vumi.handler'), handler)
-
-    def test_handler_registration(self):
-        '''
-        Tests that settings.VUMI_HANDLERS are handled to spec.
-        '''
-        with self.settings(VUMI_HANDLERS={'bad': 'django_vumi.missing_module',
-                                          'good': 'django_vumi.handler.resolve_object'}):
-            apps.get_app_config('django_vumi').ready()
-            convs = [b for _, b in DIALOGUES]
-            self.assertIn('good', convs)
-            self.assertNotIn('bad', convs)
 
     def test_send_message(self):
         '''

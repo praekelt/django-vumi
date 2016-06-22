@@ -12,18 +12,13 @@ class DjangoVumiConfig(AppConfig):
     '''
     name = 'django_vumi'
 
-    def ready(self):
+    def map_handlers(self):
+        from django_vumi.util import update_select
         from django.conf import settings
-        from django_vumi.handler import resolve_object
         from django_vumi.models import DIALOGUES, DIALOGUE_HANDLERS
 
-        # Clear list without destroying it
-        for _ in range(len(DIALOGUES)):
-            DIALOGUES.pop()
+        update_select(DIALOGUES, DIALOGUE_HANDLERS)
+        update_select(DIALOGUES, getattr(settings, 'VUMI_HANDLERS', {}))
 
-        handlers = DIALOGUE_HANDLERS.copy()
-        handlers.update(getattr(settings, 'VUMI_HANDLERS', {}))
-        for k in sorted(handlers.keys()):
-            v = handlers[k]
-            if resolve_object(v):
-                DIALOGUES.append((v, k))
+    def ready(self):
+        self.map_handlers()

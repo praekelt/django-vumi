@@ -3,10 +3,11 @@ Django-Vumi util Tests
 '''
 from __future__ import unicode_literals
 
+from django.apps import apps
 from django.test import TestCase
 
-from django_vumi.models import Message
-from django_vumi.util import idgen, gen_reply_message, is_notempty, strip_copy, cdel
+from django_vumi.models import DIALOGUES, Message
+from django_vumi.util import idgen, gen_reply_message, is_notempty, strip_copy, cdel, resolve_object
 from django_vumi.tests.helpers import generate_message
 
 
@@ -69,6 +70,43 @@ class UtilsTestCase(TestCase):
             'd': {'e': 1},
             'h': [{'i': 1}],
         })
+
+    def test_handler_registration(self):
+        '''
+        Tests that settings.VUMI_HANDLERS are handled to spec.
+        '''
+        with self.settings(VUMI_HANDLERS={'bad': 'django_vumi.missing_module',
+                                          'good': 'django_vumi.util.resolve_object'}):
+            apps.get_app_config('django_vumi').ready()
+            convs = [b for _, b in DIALOGUES]
+            self.assertIn('good', convs)
+            self.assertNotIn('bad', convs)
+
+    def test_resolve_object_valid(self):
+        '''
+        Tests resolve_object works
+        '''
+        self.assertEquals(resolve_object('django_vumi.util.resolve_object'), resolve_object)
+
+    def test_resolve_object_module_missing(self):
+        '''
+        Tests resolve_object returns none on missing module
+        '''
+        self.assertIsNone(resolve_object('django_vumi.missing_module.stuff'))
+
+    def test_resolve_object_object_missing(self):
+        '''
+        Tests resolve_object returns none on missing object in module
+        '''
+        self.assertIsNone(resolve_object('django_vumi.handler.missing_object'))
+
+    def test_resolve_object_module(self):
+        '''
+        Tests resolve_object returns none on missing object in module
+        '''
+        from django_vumi import handler
+        self.assertEquals(resolve_object('django_vumi.handler'), handler)
+
 
     def test_gen_reply_message(self):
         '''
