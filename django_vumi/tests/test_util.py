@@ -107,14 +107,13 @@ class UtilsTestCase(TestCase):
         from django_vumi import handler
         self.assertEquals(resolve_object('django_vumi.handler'), handler)
 
-
     def test_gen_reply_message(self):
         '''
         Tests that gen_reply_message generates a valid response message
         '''
         mobj = Message.log_message(generate_message(['a', 'b'], direction=True), Message.STATE_ACK)
-        self.assertEquals(mobj.from_address, 'a')
-        self.assertEquals(mobj.to_address, 'b')
+        self.assertEquals(mobj.from_alias.address, 'a')
+        self.assertEquals(mobj.to_alias.address, 'b')
 
         rmsg = gen_reply_message('text', mobj, 'resume', None)
         self.assertEquals(rmsg['from_addr'], 'b')
@@ -129,8 +128,8 @@ class UtilsTestCase(TestCase):
         Tests that gen_reply_message generates a valid response message with helper_metadata
         '''
         mobj = Message.log_message(generate_message(['a', 'b'], direction=True), Message.STATE_ACK)
-        self.assertEquals(mobj.from_address, 'a')
-        self.assertEquals(mobj.to_address, 'b')
+        self.assertEquals(mobj.from_alias.address, 'a')
+        self.assertEquals(mobj.to_alias.address, 'b')
 
         rmsg = gen_reply_message('text', mobj, 'resume', {'a': 'aha'})
         self.assertEquals(rmsg['from_addr'], 'b')

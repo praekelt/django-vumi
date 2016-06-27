@@ -6,7 +6,7 @@ import yaml
 from django.contrib import admin
 from django.utils.html import escape, mark_safe
 
-from django_vumi.models import Junebug, Channel, Dialogue, Message
+from django_vumi.models import Junebug, Channel, Dialogue, Message, Principal, Alias
 
 
 # Register your models here.
@@ -34,8 +34,8 @@ class MessageInline(admin.TabularInline):
     Message-log Inline for Dialogue
     '''
     model = Message
-    fields = ['id', 'timestamp', 'ack_timestamp', 'session_event', 'state', 'from_address',
-              'to_address', 'content', 'extra_human']
+    fields = ['id', 'timestamp', 'ack_timestamp', 'session_event', 'state', 'from_alias',
+              'to_alias', 'content', 'extra_human']
     readonly_fields = fields
     extra = 0
     can_delete = False
@@ -62,3 +62,13 @@ class DialogueAdmin(admin.ModelAdmin):
               'expires_at', 'state']
     readonly_fields = fields
     inlines = [MessageInline]
+
+
+class AliasInlines(admin.TabularInline):
+    model = Alias
+    extra = 0
+
+
+@admin.register(Principal)
+class PrincipalAdmin(admin.ModelAdmin):
+    inlines = [AliasInlines]

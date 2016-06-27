@@ -24,8 +24,8 @@ def gen_reply_message(content, reply_msg, session_event, metadata):
 
         "timestamp": str(datetime.now()),
         "in_reply_to": reply_msg.id,
-        "from_addr": reply_msg.to_address,
-        "to_addr": reply_msg.from_address,
+        "from_addr": reply_msg.to_alias.address,
+        "to_addr": reply_msg.from_alias.address,
         "session_event": session_event,
         "content": content,
 
@@ -102,7 +102,7 @@ def resolve_object(name):
 
 def update_select(select, dct):
     # Build 'current state' dict from `select`
-    cdct = {k:v for v,k in select if k}
+    cdct = {k: v for v, k in select if k}
 
     # Clear `select` list without destroying it
     for _ in range(len(select)):

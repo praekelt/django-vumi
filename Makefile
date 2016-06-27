@@ -15,6 +15,7 @@ check:
 	@echo "# Check sources for errors..."
 	@pylint -E $(checkfiles)
 	@python setup.py check -mrs
+	@./manage.py check
 	@flake8 $(checkfiles)
 
 test:

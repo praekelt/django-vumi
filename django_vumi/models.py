@@ -23,6 +23,19 @@ DIALOGUE_HANDLERS = {
 DIALOGUES = [('', '')]
 
 
+class Principal(models.Model):
+    '''
+    Principal container
+    '''
+    name = models.CharField(max_length=255)
+    data = JSONField(default={}, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):  # pragma: nocoverage
+        return self.name
+
+
 class Junebug(models.Model):
     '''
     Junebug instance
@@ -31,6 +44,9 @@ class Junebug(models.Model):
     enabled = models.BooleanField(default=True)
     amqp_service = models.CharField(max_length=255)
     amqp_exchange = models.CharField(max_length=50, default='vumi')
+
+    def __unicode__(self):  # pragma: nocoverage
+        return self.api_url
 
 
 class Channel(models.Model):
@@ -83,6 +99,31 @@ class Channel(models.Model):
 
     def __unicode__(self):  # pragma: nocoverage
         return self.label
+
+
+class Alias(models.Model):
+    '''
+    Principal aliases
+    '''
+    principal = models.ForeignKey(Principal)
+    channel = models.ForeignKey(Channel)
+    address = models.CharField(max_length=255)
+
+    @classmethod
+    def get_or_create(cls, channel, address):
+        obj = cls.objects.filter(channel=channel, address=address).first()
+        if not obj:
+            prn = Principal(name=address)
+            prn.save()
+            obj = cls(principal=prn, channel=channel, address=address)
+            obj.save()
+        return obj
+
+    def __unicode__(self):  # pragma: nocoverage
+        return self.principal.name
+
+    class Meta:
+        unique_together = (('channel', 'address'),)
 
 
 class Dialogue(models.Model):
@@ -185,8 +226,8 @@ class Message(models.Model):
     dialogue = models.ForeignKey(Dialogue, related_name='messages')
     timestamp = models.DateTimeField(null=True, blank=True)
     ack_timestamp = models.DateTimeField(null=True, blank=True)
-    from_address = models.CharField(max_length=50)
-    to_address = models.CharField(max_length=50)
+    from_alias = models.ForeignKey(Alias, related_name='from_alias')
+    to_alias = models.ForeignKey(Alias, related_name='to_alias')
     session_event = models.CharField(max_length=1, choices=EVENT_CHOICES)
     content = models.TextField(null=True, blank=True)
 
@@ -238,9 +279,10 @@ class Message(models.Model):
             follow = None
 
         # Dialogue
+        channel = Channel.get_by_uid(data['transport_name'])
         dialogue = Dialogue.update_or_new(
             follow,
-            Channel.get_by_uid(data['transport_name']),
+            channel,
             key,
             timestamp,
             data['session_event'] == 'close'
@@ -251,8 +293,8 @@ class Message(models.Model):
             state=state,
             dialogue=dialogue,
             timestamp=timestamp,
-            from_address=data['from_addr'],
-            to_address=data['to_addr'],
+            from_alias=Alias.get_or_create(channel, data['from_addr']),
+            to_alias=Alias.get_or_create(channel, data['to_addr']),
             session_event=cls.EVENT_MAP[data['session_event']]
         )
         if state == 'a':
@@ -277,4 +319,4 @@ class Message(models.Model):
         return msg
 
     def __unicode__(self):  # pragma: nocoverage
-        return "%s:%s" % (self.dialogue, self.from_address)
+        return "%s:%s" % (self.dialogue, self.from_alias)
